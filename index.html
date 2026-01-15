@@ -25,7 +25,7 @@
 
         .game-container {
             position: relative;
-            width: 600px;
+            width: 606px; /* 600px canvas + 6px for borders (3px each side) */
             max-width: 95vw;
         }
 
@@ -38,22 +38,40 @@
             border-radius: 15px 15px 0 0;
             border: 3px solid #FF69B4;
             border-bottom: none;
+            box-sizing: border-box;
+            width: 100%;
         }
 
-        .score-display, .level-display, .lives-display {
+        .score-display, .lives-display {
             font-size: 18px;
             font-weight: bold;
             color: #8B008B;
+            min-width: 100px;
+        }
+
+        .score-display {
+            text-align: left;
         }
 
         .lives-display {
             color: #FF1493;
+            text-align: right;
+        }
+
+        .parent-mood-header {
+            font-size: 14px;
+            color: #8B008B;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: bold;
         }
 
         #gameCanvas {
             display: block;
             background: linear-gradient(to bottom, #FFF8DC, #FFEFD5);
-            border: 3px solid #FF69B4;
+            border-left: 3px solid #FF69B4;
+            border-right: 3px solid #FF69B4;
             border-top: none;
             border-bottom: none;
         }
@@ -67,6 +85,8 @@
             display: flex;
             align-items: center;
             gap: 15px;
+            box-sizing: border-box;
+            width: 100%;
         }
 
         .current-problem {
@@ -462,17 +482,38 @@
             z-index: -1;
         }
 
-        .parent-mood {
+        /* Screen shake animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        .shake {
+            animation: shake 0.5s ease-in-out;
+        }
+
+        .six-seven-popup {
             position: absolute;
-            top: 10px;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%);
-            font-size: 14px;
-            color: #8B008B;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 5px 15px;
-            border-radius: 20px;
+            transform: translate(-50%, -50%);
+            font-size: 48px;
             font-weight: bold;
+            color: #FF1493;
+            text-shadow: 3px 3px 0 #FFD700, -2px -2px 0 #8B008B;
+            z-index: 200;
+            animation: sixSevenPop 1.5s ease-out forwards;
+            pointer-events: none;
+        }
+
+        @keyframes sixSevenPop {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5) rotate(-10deg); }
+            20% { opacity: 1; transform: translate(-50%, -50%) scale(1.3) rotate(5deg); }
+            40% { transform: translate(-50%, -50%) scale(1) rotate(-3deg); }
+            60% { transform: translate(-50%, -50%) scale(1.1) rotate(2deg); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+            100% { opacity: 0; transform: translate(-50%, -70%) scale(0.8); }
         }
     </style>
 </head>
@@ -483,19 +524,16 @@
     <div class="room-decor" style="bottom: 30%; left: 3%;">🎮</div>
     <div class="room-decor" style="bottom: 20%; right: 5%;">🖼️</div>
 
-    <div class="game-container">
+    <div class="game-container" id="gameContainer">
         <!-- Header -->
         <div class="header">
             <div class="score-display">Score: <span id="score">0</span></div>
-            <div class="level-display">Level: <span id="level">1</span></div>
+            <div class="parent-mood-header" id="parentMood">Mom's Mood: 😊 Chill</div>
             <div class="lives-display">Chances: <span id="lives">⭐⭐⭐</span></div>
         </div>
 
         <!-- Game Canvas -->
         <canvas id="gameCanvas" width="600" height="400"></canvas>
-
-        <!-- Parent Mood Indicator -->
-        <div class="parent-mood" id="parentMood">Mom's Mood: 😊 Chill</div>
 
         <!-- Combo Display -->
         <div class="combo-display" id="comboDisplay">🔥 On a roll! x<span id="comboCount">0</span></div>
@@ -527,6 +565,7 @@
                 <strong>How to Play:</strong><br>
                 🧦 Clothes are falling everywhere! So not skibidi!<br>
                 ⌨️ Solve the math problem to put them away<br>
+                ➕➖✖️➗ Addition, subtraction, multiplication & division<br>
                 ✅ Right answer = item goes in the basket<br>
                 ❌ Wrong answer = mom gets more sus<br>
                 🔥 Keep your streak going for max aura!
@@ -634,23 +673,26 @@
             easy: {
                 baseSpeed: 0.25,
                 spawnInterval: 4500,
-                operations: ['×'],
+                operations: ['+', '-', '×'],
                 maxNumber: 10,
-                tables: [2, 5, 10]
+                tables: [2, 5, 10],
+                addSubMax: 20  // max number for addition/subtraction
             },
             medium: {
                 baseSpeed: 0.35,
                 spawnInterval: 3800,
-                operations: ['×', '÷'],
+                operations: ['+', '-', '×', '÷'],
                 maxNumber: 10,
-                tables: [2, 3, 4, 5, 6, 10]
+                tables: [2, 3, 4, 5, 6, 10],
+                addSubMax: 50
             },
             hard: {
                 baseSpeed: 0.45,
                 spawnInterval: 3200,
-                operations: ['×', '÷'],
+                operations: ['+', '-', '×', '÷'],
                 maxNumber: 12,
-                tables: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+                tables: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12],
+                addSubMax: 100
             }
         };
 
@@ -886,12 +928,26 @@
             
             let num1, num2, answer, problemText;
             
-            if (operation === '×') {
+            if (operation === '+') {
+                // Addition
+                num1 = Math.floor(Math.random() * config.addSubMax) + 1;
+                num2 = Math.floor(Math.random() * (config.addSubMax - num1)) + 1;
+                answer = num1 + num2;
+                problemText = `${num1} + ${num2}`;
+            } else if (operation === '-') {
+                // Subtraction (ensure positive result)
+                num1 = Math.floor(Math.random() * config.addSubMax) + 10;
+                num2 = Math.floor(Math.random() * Math.min(num1 - 1, config.addSubMax / 2)) + 1;
+                answer = num1 - num2;
+                problemText = `${num1} - ${num2}`;
+            } else if (operation === '×') {
+                // Multiplication
                 num1 = table;
                 num2 = Math.floor(Math.random() * 10) + 1;
                 answer = num1 * num2;
                 problemText = `${num1} × ${num2}`;
             } else {
+                // Division
                 num2 = table;
                 const multiplier = Math.floor(Math.random() * 10) + 1;
                 num1 = num2 * multiplier;
@@ -942,6 +998,11 @@
             input.focus();
             
             if (isNaN(answer)) return;
+            
+            // Easter egg: "Six Seven!" for answer 67
+            if (answer === 67) {
+                showSixSeven();
+            }
             
             const targetItem = gameState.items.reduce((lowest, item) => {
                 if (!lowest || item.y > lowest.y) return item;
@@ -1273,7 +1334,6 @@
         // ========== UI UPDATES ==========
         function updateDisplay() {
             document.getElementById('score').textContent = gameState.score;
-            document.getElementById('level').textContent = gameState.level;
             
             let stars = '';
             for (let i = 0; i < gameState.lives; i++) stars += '⭐';
@@ -1330,6 +1390,24 @@
             setTimeout(() => feedback.remove(), 1000);
         }
 
+        function showSixSeven() {
+            // Shake the screen
+            const container = document.getElementById('gameContainer');
+            container.classList.add('shake');
+            setTimeout(() => container.classList.remove('shake'), 500);
+            
+            // Show the "Six Seven!" popup
+            const popup = document.createElement('div');
+            popup.className = 'six-seven-popup';
+            popup.innerHTML = '🎉 SIX SEVEN! 🎉<br><span style="font-size: 24px;">Why was 6 afraid of 7?</span>';
+            document.querySelector('.game-container').appendChild(popup);
+            
+            // Play a fun sound
+            playSound('sixseven');
+            
+            setTimeout(() => popup.remove(), 1500);
+        }
+
         // ========== AUDIO ==========
         function playSound(type) {
             try {
@@ -1365,6 +1443,17 @@
                     gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
                     oscillator.start(audioCtx.currentTime);
                     oscillator.stop(audioCtx.currentTime + 0.3);
+                } else if (type === 'sixseven') {
+                    // Fun celebratory jingle for the 67 easter egg
+                    oscillator.type = 'sine';
+                    const notes = [392, 523.25, 659.25, 783.99, 659.25, 783.99, 1046.5];
+                    notes.forEach((freq, i) => {
+                        oscillator.frequency.setValueAtTime(freq, audioCtx.currentTime + i * 0.1);
+                    });
+                    gainNode.gain.setValueAtTime(0.3, audioCtx.currentTime);
+                    gainNode.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.8);
+                    oscillator.start(audioCtx.currentTime);
+                    oscillator.stop(audioCtx.currentTime + 0.8);
                 }
             } catch (e) {
                 // Audio not supported
