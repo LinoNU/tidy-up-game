@@ -1,6 +1,6 @@
 # 🧦 Tidy Up! - The Math Room Challenge
 
-A fun, Gen Alpha-themed math game to practice multiplication and division! Help clean your room before mom gets mad by solving math problems.
+A fun, Gen Alpha-themed math game to practice addition, subtraction, multiplication, and division! Help clean your room before mom gets mad by solving math problems.
 
 ## 🎮 Play Now
 
@@ -16,23 +16,25 @@ A fun, Gen Alpha-themed math game to practice multiplication and division! Help 
 
 ## 🎯 Difficulty Levels
 
-| Level | Name | Operations | Tables |
-|-------|------|------------|--------|
-| 😌 | Chill | Multiplication only | 2, 5, 10 |
-| 😎 | Mid | Multiplication & Division | 2, 3, 4, 5, 6, 10 |
-| 🗿 | Sigma | Multiplication & Division | 2–12 |
+| Level | Name | Operations | Notes |
+|-------|------|------------|-------|
+| 😌 | Chill | + − × | Numbers up to 20 for +/−, times tables 2, 5, 10 |
+| 😎 | Mid | + − × ÷ | Numbers up to 50 for +/−, times tables 2-6, 10 |
+| 🗿 | Sigma | + − × ÷ | Numbers up to 100 for +/−, all times tables 2-12 |
 
 ## ✨ Features
 
+- **Four operations** - Addition, subtraction, multiplication, and division
 - **Three difficulty levels** - Start chill, go sigma
-- **Aura Leaderboard** - Top 3 high scores saved locally
+- **Aura Leaderboard** - Top 3 high scores with custom names
 - **Gen Alpha vibes** - Skibidi-approved messages and slang
 - **No violence** - Just wholesome room cleaning!
 - **Works everywhere** - Phone, tablet, or computer
+- **🥚 Easter egg** - Try typing 67... 😉
 
 ## 🏆 Leaderboard
 
-Compete for the top 3 spots! Scores are saved on your device, so everyone gets their own leaderboard.
+Compete for the top 3 spots! Enter your name when you get a high score. Scores are saved on your device.
 
 ## 💻 Technical Details
 
